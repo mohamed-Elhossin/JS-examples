@@ -1,0 +1,18 @@
+.form-group {
+    margin: 10px 0px;
+}
+
+#mydiv {
+    transition: all .5s;
+}
+#yourNameInput{
+display: none;
+}
+.none{
+    display: none;
+}
+
+.myCard {
+    margin: 20px 0px;
+    overflow: hidden;
+}

@@ -1,0 +1,53 @@
+.mode {
+    text-align: center;
+    font-size: 60px;
+    margin: 100px 0px;
+}
+
+i.light {
+    text-shadow: 0px 0px 5px yellow;
+    color: yellow;
+    cursor: pointer;
+
+}
+
+i.dark {
+    text-shadow: 0px 0px 5px black;
+    /* color: white; */
+    cursor: pointer;
+}
+
+
+.dark-mode {
+    background-color: black;
+    color: white;
+}
+
+.card-dark {
+    background-color: #333;
+    color: white;
+    border: 1px solid white;
+    text-align: center;
+}
+
+.form-group {
+    position: relative;
+}
+
+input.form-control {
+    /* padding-left: 50px; */
+    border-left: black 1px solid;
+    transition: all .5s;
+
+}
+
+i {
+    position: absolute;
+    top: 30%;
+    left: 20px;
+}
+
+
+.none {
+    opacity: 0;
+}
