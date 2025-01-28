@@ -1,0 +1,30 @@
+.accourBtn {
+    background-color: white;
+    border-radius: 3px;
+    border: 1px solid rgb(0, 0, 0);
+    color: black;
+    padding: 10px;
+    width: 100%;
+    cursor: pointer;
+
+}
+
+
+.accourBtn i {
+    margin-right: 10px;
+    font-size: 18px;
+    transition: all .5s;
+}
+
+.accor {
+    height: 0;
+    background-color: aliceblue;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    transition: all .5s;
+    overflow: hidden;
+}
+
+.active{
+    background-color: rgba(165, 246, 147, 0.676);
+}
