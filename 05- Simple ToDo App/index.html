@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/all.min.css">
+    <link rel="stylesheet" href="./css/main.css">
+</head>
+
+<body>
+
+
+    <h3 class="my-3 text-center">To Do App JS <span id="mydate"></span> </h3>
+
+
+    <div class="container col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <div class="form-group">
+                    <input type="text" id="task_input" class="form-control my-3" placeholder="Write Your Task">
+
+                    <div id="validationDiv" class="alert alert-danger none ">
+                        Your Must Enter Data
+                    </div>
+                </div>
+                <div class="d-grid">
+                    <button id="task_button" class="btn btn-info"> Add Your Task </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="container col-md-8  mt-5">
+        <h6 class="my-3 text-center">List Your Tasks </h6>
+        <div class="card">
+            <div class="d-grid">
+                <button id="deleteAllBtn" class="btn btn-danger mb-2 w-50 mx-auto none"> Delete All Tasks </button>
+            </div>
+            <div class="card-body">
+                <div id="empty_task_div">
+                    <div class="alert alert-danger">
+                        Empty Tasks Today
+                    </div>
+                </div>
+                <div id="all_tasks"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="./js/main.js"> </script>
+</body>
+
+</html>
