@@ -1,0 +1,66 @@
+ body {
+     background-color: black;
+     color: white;
+ }
+
+ .card {
+     background-color: #333;
+     color: white;
+     padding: 20px;
+ }
+
+ .form-control , .form-select{
+     background-color: #555;
+     color: white;
+     text-align: center;
+     font-weight: bold;
+     margin: 10px;
+ }
+
+ .form-control::placeholder {
+     color: white;
+ }
+
+ #all_tasks i {
+     color: rgb(237, 75, 75);
+     cursor: pointer;
+     transition: all .4s;
+ }
+
+ #all_tasks i:hover {
+     transform: scale(1.112, 1.112);
+ }
+
+ .none {
+     display: none;
+ }
+
+ .checked {
+     background-color: gray !important;
+     text-decoration: line-through;
+     opacity: 0.7;
+ }
+
+
+ tbody i{
+    font-size: 19px;
+    cursor: pointer;
+ }
+
+ 
+ .modal{
+    display: block !important;
+    background-color: rgba(0,0,0,0.5);
+ }
+
+ .modal-header{
+    background-color: #444;
+ }
+
+ .modal-body{
+    background-color:#555;
+ }
+
+ .modal-footer{
+    background-color: #444;
+ }
