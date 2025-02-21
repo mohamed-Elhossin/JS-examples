@@ -14,40 +14,67 @@ let resetBtn = document.getElementById("resetBtn");
 let deleteAllBtn = document.getElementById("deleteAllBtn");
 let CountAllProduct = document.getElementById("CountAllProduct");
 let allInput = document.querySelectorAll("input");
-let displayValidationMessage = document.getElementById(
-  "displayValidationMessage"
-);
-let validationMessage = document.getElementById("validationMessage");
+let displayValidationMessage = document.getElementById("displayValidationMessage");
+let validationMessage = document.querySelectorAll("#validationMessage");
 
-let errors = [];
-let checkvalidation = () => {
-  for (let i = 0; i < allInput.length; i++) {
-    if (allInput[i].value == "") {
-      errors.push(`Please Enter Valid ${allInput[i].getAttribute("id")} `);
-      displayValidationMessageFunction();
-      addProductBtn.disabled = true;
+
+
+let errors = ["invalid inputs"];
+let errorsNumber = ["invalid inputs"];
+
+
+let checkvalidationNumber = () => {
+   
+  for (let M = 0; M < allCostInputs.length; M++) {
+
+    if (parseFloat(allCostInputs[M].value) < 0 ) {
+      errorsNumber.push(`Error in ${allCostInputs[M].getAttribute('id')}`)
+      console.log(errorsNumber);
+      break;
     } else {
-      errors.splice(i, 1);
+      errorsNumber.splice(0);
+      console.log(errorsNumber);
     }
+   
   }
-};
-let displayValidationMessageFunction = () => {
-  if (errors.length > 0) {
-    displayValidationMessage.classList.remove("none");
-    let validationError = "";
-    for (let i = 0; i < errors.length; i++) {
-      validationError += errors[i] + " <br>";
-    }
-    displayValidationMessage.innerHTML = validationError;
-  } else {
-    addProductBtn.disabled = false;
-    displayValidationMessage.classList.add("none");
-  }
-};
 
-addProductBtn.addEventListener("click", function () {
-  checkvalidation();
-});
+
+}
+for (let x = 0; x < allCostInputs.length; x++) {
+
+  allCostInputs[x].addEventListener("change", checkvalidationNumber);
+}
+let checkvalidation = () => {
+  for (let m = 0; m < allInput.length; m++) {
+    if (allInput[m].value.length == 0) {
+      errors.push(`Error in ${allInput[m].getAttribute('id')}`)
+    } else {
+      errors.splice(0);
+    }
+  }
+}
+
+for (let m = 0; m < allInput.length; m++) {
+  allInput[m].addEventListener("change", checkvalidation);
+}
+for (let m = 0; m < allInput.length; m++) {
+
+  allInput[m].addEventListener("keyup", function () {
+
+    if (allInput[m].value.length == 0) {
+      allInput[m].classList.add("invalid");
+      validationMessage[m].classList.remove("none");
+      validationMessage[m].innerHTML = `invalid Value ${allInput[m].getAttribute('id')}`
+    } else {
+      allInput[m].classList.remove("invalid");
+      validationMessage[m].classList.add("none");
+      validationMessage[m].innerHTML = ``
+    }
+
+  });
+
+}
+
 
 // step 2 This Json Array
 let allProducts;
@@ -85,6 +112,7 @@ for (let i = 0; i < allCostInputs.length; i++) {
 
 // step 2 Create Object and push this object in array
 let createObject = () => {
+
   let newProductObject = {
     name: product_Name.value,
     category: product_category.value,
@@ -98,21 +126,26 @@ let createObject = () => {
     productCount: productCount.value,
   };
 
-  if (mode == "create") {
-    if (productCount.value <= 0) {
-      allProducts.push(newProductObject);
-    } else {
-      for (let i = 0; i < productCount.value; i++) {
+  if (errors.length == 0 && errorsNumber.length == 0) {
+    if (mode == "create") {
+      if (productCount.value <= 0) {
+
+
         allProducts.push(newProductObject);
+      } else {
+        for (let i = 0; i < productCount.value; i++) {
+
+          allProducts.push(newProductObject);
+        }
       }
+    } else {
+      allProducts[globalId] = newProductObject;
+      mode = "create";
+      productCount.classList.remove("none");
+      resetBtn.innerHTML = "Reset";
+      addProductBtn.innerHTML = "Add Your Product";
+      addProductBtn.classList.replace("btn-warning", "btn-info");
     }
-  } else {
-    allProducts[globalId] = newProductObject;
-    mode = "create";
-    productCount.classList.remove("none");
-    resetBtn.innerHTML = "Reset";
-    addProductBtn.innerHTML = "Add Your Product";
-    addProductBtn.classList.replace("btn-warning", "btn-info");
   }
 
   //productCount.value
@@ -128,7 +161,10 @@ let createObject = () => {
   CountAllProduct.innerHTML = allProducts.length;
 };
 // step 2
+
 addProductBtn.addEventListener("click", createObject);
+
+
 
 // step 3
 let checkEmpty = () => {
