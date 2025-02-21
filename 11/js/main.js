@@ -10,107 +10,164 @@ let empty_task_div = document.getElementById("empty_task_div");
 let tbody = document.getElementById("tbody");
 let product_div = document.getElementById("product_div");
 let layout = document.getElementById("layout");
+let resetBtn = document.getElementById("resetBtn");
+let deleteAllBtn = document.getElementById("deleteAllBtn");
+let CountAllProduct = document.getElementById("CountAllProduct");
+let allInput = document.querySelectorAll("input");
+let displayValidationMessage = document.getElementById(
+  "displayValidationMessage"
+);
+let validationMessage = document.getElementById("validationMessage");
+
+let errors = [];
+let checkvalidation = () => {
+  for (let i = 0; i < allInput.length; i++) {
+    if (allInput[i].value == "") {
+      errors.push(`Please Enter Valid ${allInput[i].getAttribute("id")} `);
+      displayValidationMessageFunction();
+      addProductBtn.disabled = true;
+    } else {
+      errors.splice(i, 1);
+    }
+  }
+};
+let displayValidationMessageFunction = () => {
+  if (errors.length > 0) {
+    displayValidationMessage.classList.remove("none");
+    let validationError = "";
+    for (let i = 0; i < errors.length; i++) {
+      validationError += errors[i] + " <br>";
+    }
+    displayValidationMessage.innerHTML = validationError;
+  } else {
+    addProductBtn.disabled = false;
+    displayValidationMessage.classList.add("none");
+  }
+};
+
+addProductBtn.addEventListener("click", function () {
+  checkvalidation();
+});
+
 // step 2 This Json Array
 let allProducts;
 if (localStorage.myProduct != null) {
-    allProducts = JSON.parse(localStorage.getItem("myProduct"));
-    console.log(allProducts);
+  allProducts = JSON.parse(localStorage.getItem("myProduct"));
+  console.log(allProducts);
 } else {
-    allProducts = [];
+  allProducts = [];
 }
-
+let mode = "create";
+let globalId;
+CountAllProduct.innerHTML = allProducts.length;
 // step 1 calc Function
 let CalcCost = () => {
-    let cost = allCostInputs[0].value;
-    let tax = allCostInputs[1].value;
-    let myProfit = allCostInputs[2].value;
-    let discount = allCostInputs[3].value;
-    // 1000 * 10%
-    // 100
-    let taxCost = +cost * (+tax / 100);
-    allCostInputs[4].value = +cost + +taxCost + +myProfit;
-    let saleCost = +allCostInputs[4].value;
-    let discountCost = +saleCost * (+discount / 100);
-    discountCostSpan.innerHTML = `Your Discount Cost ${Math.ceil(discountCost)}`;
-    let mySaleCostAfterDiscout = +saleCost - +discountCost;
-    allCostInputs[4].value = Math.floor(+mySaleCostAfterDiscout);
-    taxCostSpan.innerHTML = `Your Tax Cost ${Math.ceil(taxCost)}`;
-    allCostInputs[5].value = Math.ceil(+myProfit - +discountCost);
-}
+  let cost = allCostInputs[0].value;
+  let tax = allCostInputs[1].value;
+  let myProfit = allCostInputs[2].value;
+  let discount = allCostInputs[3].value;
+  // 1000 * 10%
+  // 100
+  let taxCost = +cost * (+tax / 100);
+  allCostInputs[4].value = +cost + +taxCost + +myProfit;
+  let saleCost = +allCostInputs[4].value;
+  let discountCost = +saleCost * (+discount / 100);
+  discountCostSpan.innerHTML = `Your Discount Cost ${Math.ceil(discountCost)}`;
+  let mySaleCostAfterDiscout = +saleCost - +discountCost;
+  allCostInputs[4].value = Math.floor(+mySaleCostAfterDiscout);
+  taxCostSpan.innerHTML = `Your Tax Cost ${Math.ceil(taxCost)}`;
+  allCostInputs[5].value = Math.ceil(+myProfit - +discountCost);
+};
 // step 1 make key up event on calc cost inputs
 for (let i = 0; i < allCostInputs.length; i++) {
-    allCostInputs[i].addEventListener("keyup", CalcCost);
+  allCostInputs[i].addEventListener("keyup", CalcCost);
 }
 
 // step 2 Create Object and push this object in array
 let createObject = () => {
-    let newProductObject = {
-        name: product_Name.value,
-        category: product_category.value,
-        cost: allCostInputs[0].value,
-        tax: allCostInputs[1].value,
-        profit: allCostInputs[2].value,
-        discout: allCostInputs[3].value,
-        sale_cost: allCostInputs[4].value,
-        netProfit: allCostInputs[5].value,
-        image_url: productImg.value,
-        productCount: productCount.value,
+  let newProductObject = {
+    name: product_Name.value,
+    category: product_category.value,
+    cost: allCostInputs[0].value,
+    tax: allCostInputs[1].value,
+    profit: allCostInputs[2].value,
+    discout: allCostInputs[3].value,
+    sale_cost: allCostInputs[4].value,
+    netProfit: allCostInputs[5].value,
+    image_url: productImg.value,
+    productCount: productCount.value,
+  };
+
+  if (mode == "create") {
+    if (productCount.value <= 0) {
+      allProducts.push(newProductObject);
+    } else {
+      for (let i = 0; i < productCount.value; i++) {
+        allProducts.push(newProductObject);
+      }
     }
-    allProducts.push(newProductObject)
-    console.log(newProductObject);
+  } else {
+    allProducts[globalId] = newProductObject;
+    mode = "create";
+    productCount.classList.remove("none");
+    resetBtn.innerHTML = "Reset";
+    addProductBtn.innerHTML = "Add Your Product";
+    addProductBtn.classList.replace("btn-warning", "btn-info");
+  }
 
-    console.log(allProducts);
+  //productCount.value
+  console.log(newProductObject);
 
-    localStorage.setItem("myProduct", JSON.stringify(allProducts));
-    showData();
-    checkEmpty();
+  console.log(allProducts);
 
-}
-// step 2 
+  localStorage.setItem("myProduct", JSON.stringify(allProducts));
+  showData();
+  checkEmpty();
+  resetinputs();
+
+  CountAllProduct.innerHTML = allProducts.length;
+};
+// step 2
 addProductBtn.addEventListener("click", createObject);
 
-
-// step 3 
+// step 3
 let checkEmpty = () => {
-    if (tbody.childElementCount == 0 && allProducts.length == 0) {
-        empty_task_div.classList.remove("none");
-        product_div.classList.add("none");
-    } else {
-        empty_task_div.classList.add("none");
-        product_div.classList.remove("none");
-    }
-}
+  if (tbody.childElementCount == 0 && allProducts.length == 0) {
+    empty_task_div.classList.remove("none");
+    deleteAllBtn.classList.add("none");
+    product_div.classList.add("none");
+  } else {
+    empty_task_div.classList.add("none");
+    deleteAllBtn.classList.remove("none");
+
+    product_div.classList.remove("none");
+  }
+};
 checkEmpty();
 let showData = () => {
-    checkEmpty();
-    let tableRow = '';
+  checkEmpty();
+  let tableRow = "";
 
-    for (let i = 0; i < allProducts.length; i++) {
-        tableRow += `
+  for (let i = 0; i < allProducts.length; i++) {
+    tableRow += `
         <tr> 
-              <th>  ${i + 1}   </th>
+        <th>  ${i + 1}   </th>
         <th>  ${allProducts[i].name}   </th>
         <th>  ${allProducts[i].category}   </th>
      <th><i onclick="viewModelOneItem(${i})" class="fa-regular fa-eye text-info"></i></th>
-     <th><i class="fa-solid fa-pen-to-square text-warning"></i></th>
+     <th><i onclick="updateOneItem(${i})" class="fa-solid fa-pen-to-square text-warning"></i></th>
      <th><i onclick="remove_one_item(${i})"  class="fa-solid fa-trash-can text-danger"></i></th>
         </tr>
-        `
-    }
+        `;
+  }
 
-    tbody.innerHTML = tableRow;
-
-
-}
-
+  tbody.innerHTML = tableRow;
+};
 showData();
-
-
 let viewModelOneItem = (i) => {
+  console.log(allProducts[i]);
 
-    console.log(allProducts[i]);
-
-    layout.innerHTML = ` <div class="modal" tabindex="-1">
+  layout.innerHTML = ` <div class="modal" tabindex="-1">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -141,21 +198,79 @@ let viewModelOneItem = (i) => {
             </div>
         </div>
     </div>`;
-}
-
+};
 
 let closeModel = () => {
-    layout.innerHTML = "";
-}
-
-
+  layout.innerHTML = "";
+};
 
 let remove_one_item = (i) => {
-    if (confirm("Are Your Sure")) {
-        allProducts.splice(i, 1);
-        localStorage.myProduct = JSON.stringify(allProducts);
-        showData();
-        checkEmpty();
-    }
+  if (confirm("Are Your Sure")) {
+    allProducts.splice(i, 1);
+    localStorage.myProduct = JSON.stringify(allProducts);
+    showData();
+    checkEmpty();
+    CountAllProduct.innerHTML = allProducts.length;
+  }
+};
+let resetinputs = () => {
+  if (mode == "update") {
+    mode = "create";
+    productCount.classList.remove("none");
+    resetBtn.innerHTML = "Reset";
+    addProductBtn.innerHTML = "Add Your Product";
+    addProductBtn.classList.replace("btn-warning", "btn-info");
+    product_Name.value = "";
+    product_category.value = "";
+    allCostInputs[0].value = "";
+    allCostInputs[1].value = "";
+    allCostInputs[2].value = "";
+    allCostInputs[3].value = "";
+    allCostInputs[4].value = "";
+    allCostInputs[5].value = "";
+    productImg.value = "";
+    productCount.value = "";
+  } else {
+    product_Name.value = "";
+    product_category.value = "";
+    allCostInputs[0].value = "";
+    allCostInputs[1].value = "";
+    allCostInputs[2].value = "";
+    allCostInputs[3].value = "";
+    allCostInputs[4].value = "";
+    allCostInputs[5].value = "";
+    productImg.value = "";
+    productCount.value = "";
+  }
+};
+resetBtn.addEventListener("click", resetinputs);
 
-}
+let updateOneItem = (i) => {
+  globalId = i;
+  mode = "update";
+  product_Name.value = allProducts[i].name;
+  product_category.value = allProducts[i].category;
+  allCostInputs[0].value = allProducts[i].cost;
+  allCostInputs[1].value = allProducts[i].tax;
+  allCostInputs[2].value = allProducts[i].profit;
+  allCostInputs[3].value = allProducts[i].discout;
+  allCostInputs[4].value = allProducts[i].sale_cost;
+  allCostInputs[5].value = allProducts[i].netProfit;
+  productImg.value = allProducts[i].image_url;
+
+  addProductBtn.innerHTML = "Update Your Product";
+  addProductBtn.classList.replace("btn-info", "btn-warning");
+  resetBtn.innerHTML = "Cancel Update";
+  productCount.classList.add("none");
+};
+
+let clearAll = () => {
+  if (confirm("Are You Sure")) {
+    allProducts.splice(0);
+    localStorage.removeItem("myProduct");
+    showData();
+    CountAllProduct.innerHTML = allProducts.length;
+    checkEmpty();
+  }
+};
+deleteAllBtn.addEventListener("click", clearAll);
